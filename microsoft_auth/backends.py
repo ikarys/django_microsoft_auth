@@ -18,6 +18,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
 
     config = None
     microsoft = None
+    groups = []
 
     def __init__(self, user=None):
         from .conf import config
@@ -51,6 +52,7 @@ class MicrosoftAuthenticationBackend(ModelBackend):
         if user is not None:
             self._call_hook(user)
 
+        user.ad_groups = self.groups
         return user
 
     def _authenticate_user(self):
@@ -194,7 +196,8 @@ class MicrosoftAuthenticationBackend(ModelBackend):
 
             microsoft_user.user = user
             microsoft_user.save()
-
+        if "groups" in data:
+            self.groups = data.get("groups")
         return user
 
     def _get_existing_microsoft_account(self, user):

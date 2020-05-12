@@ -134,6 +134,7 @@ class AuthenticateCallbackView(View):
                     self.context["message"] = {"error": "login_failed"}
                 else:
                     login(self.request, user)
+                    self.request.session["groups"] = user.ad_groups
 
     def post(self, request):
         """ main callback for Microsoft to call
